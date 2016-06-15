@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd    
+                        http://www.springframework.org/schema/context    
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd    
+                        http://www.springframework.org/schema/mvc    
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">  
+                        
+                        
+    <!--自动扫描该包下所有的组件,根据标注处理-->
+	<!-- enable autowire -->
+	<context:annotation-config /> 
+	
+    <context:property-placeholder location="classpath:jdbc.properties" />
+    
+    <!-- 开启定时器 -->
+	<context:component-scan base-package="
+	    summer,
+	    summer.*.controller,
+	    summer.*.service.impl,
+		test.controller,
+		test.service.impl
+		"/>
+	<!-- Configures the @Controller programming model 必须加上这个，不然请求controller时会出现no mapping url错误-->
+	<mvc:annotation-driven />
+    <!-- 用apache的datasource -->
+	<bean id="dataSource"   class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:url="${jdbc.databaseurl}"
+		p:username="${jdbc.username}"
+		p:password="${jdbc.password}" >
+		<property name="maxActive">
+			<value>${jdbc.maxActive}</value>
+		</property>  
+		<property name="initialSize">
+			<value>${jdbc.initialSize}</value>
+		</property>  
+		<property name="maxWait">
+			<value>${jdbc.maxWait}</value>
+		</property>  
+		<property name="maxIdle">
+			<value>${jdbc.maxIdle}</value>
+		</property>
+		<property name="minIdle">
+			<value>${jdbc.minIdle}</value>
+		</property>
+		<!--  
+			<property name="removeAbandoned"><value>true</value></property>
+			<property name="removeAbandonedTimeout"><value>180</value></property>  
+			<property name="testOnBorrow"><value>true</value></property>
+			<property name="testOnReturn"><value>true</value></property>
+			<property name="testWhileIdle"><value>true</value></property>
+			<property name="validationQuery"><value>select count(*) from code_type</value></property>
+			<property name="validationQueryTimeout"><value>2</value></property> -->
+		<!-- 只要下面两个参数设置成小于8小时(MySql默认)，就能避免MySql的8小时自动断开连接问题 -->
+		<property name="timeBetweenEvictionRunsMillis">
+			<value>18000000</value>
+		</property><!-- 5小时 -->
+		<property name="minEvictableIdleTimeMillis">
+			<value>10800000</value>
+		</property><!-- 3小时 -->
+	</bean>  
+  
+    <!-- define the SqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="typeAliasesPackage" value="
+		    summer,
+			test
+			"/>
+		<!-- 可以单独指定mybatis的配置文件，或者写在本文件里面。 用下面的自动扫描装配(推荐)或者单独mapper 
+			<property name="configLocation" value="classpath:config/mybatis-config.xml" />
+			-->
+	</bean>  
+  
+    <!-- DAO接口所在包名，Spring会自动查找其下的类 -->  
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="
+		    summer.*.mapper,
+			test.mapper
+			"/>
+	</bean>  
+  
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->  
+    <bean id="transactionManager"  
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="dataSource" />  
+    </bean>  
+  
+</beans>  

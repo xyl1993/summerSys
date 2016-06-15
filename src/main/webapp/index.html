@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>小夏主页维护系统</title>
+<link rel="stylesheet" href="public/js-util/jquery-easyui/themes/default/easyui.css">
+<link rel="stylesheet" href="public/js-util/jquery-easyui/themes/icon.css">
+<link rel="stylesheet" href="public/css/main.css">
+<link rel="stylesheet" href="public/css/webuploader.css">
+</head>
+<body class="easyui-layout my-layout">
+    <div region="north" split="false"  style="height:80px;">
+      <div class="user-state">
+       <span id="userName"></span><span>点击<a href="javascript:0" id="loginOut">注销</a></span>
+      </div>
+	</div>
+	<div region="south" split="false" style="height:40px;">
+	  <div class="bottom-dyn">
+		<span class="law font">Copyright © 2014-2016 YUNZHUJIA.CN <span class="mobile-hide">.All Rights Reserved.苏ICP备13020149号 </span>
+		</span>
+	  </div>
+	</div>
+	<div data-options="region:'west',title:'我的菜单'" style="width:180px;">
+		<div id="accordion" class="easyui-accordion" data-options="fit:true,border:false" >
+		  <div title="系统设置" data-options="iconCls:'icon-mini-system'" >
+			<ul class="easyui-tree" id="tt" data-options="animate:true">
+			</ul>
+		  </div>
+		</div>
+	</div>
+	
+
+    <!--主工作区-->
+    <div data-options="region:'center' " style="padding: 5px; background: #eee;">
+       <div id="mainPanle" class="easyui-tabs" fit="true" border="false">
+          <div title="Home" class="my-home">
+            <img src="public/images/index_logo.jpg" />
+          </div>
+        </div>
+    </div>
+
+<script type="text/javascript" src="public/js-util/jquery.min.js"></script>
+<script type="text/javascript" src="public/js-util/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="public/js-util/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="public/js-util/webuploader.min.js"></script>
+<script src="public/my-javascript/const.js"></script>
+<script src="public/my-javascript/util.js"></script>
+<script type="text/javascript">
+	function addTab(node){
+		if(node.children && node.children.length>0){
+			return;
+		}
+		if(!node.url){
+			$.messager.alert('提示','此模块并未配置url或配置错误,请重新配置!');
+			return;
+		}
+		var tt = $('#mainPanle');
+		tt.tabs({
+			onBeforeClose:function(t){
+	    	}
+		});
+		
+		if (tt.tabs('exists', node.text)){
+	    	tt.tabs('select', node.text);
+		} else {
+	    	tt.tabs('add',{
+		    	title:node.text,
+		    	closable:true,
+		    	href:node.url
+	    	});
+		}
+	}
+	$(function() {
+		//checkUser();
+		/* 生成菜单 */
+		(function() {
+			var data, jsonText;
+			$.ajax({
+				url : 'module/getModule?id=0',
+				method : 'post'
+			}).success(function(resp) {
+				setTimeout(function() {
+					$('#tt').tree({
+						data : resp.data[0].children,
+						onClick : function(node) {
+							addTab(node);
+						}
+					});
+				}, 500)
+			})
+		})();
+	})
+	/*检查用户  */
+	function checkUser() {
+		$.ajax({
+			url : 'login/getUser',
+			method : 'post'
+		}).success(function(data) {
+			if (data) {
+				$('#userName').text(data.login_name + "欢迎您，");
+			} else {
+				window.location = "login.html";
+			}
+		});
+	};
+	$("#loginOut").click(function() {
+		$.ajax({
+			url : 'login/logOut',
+			method : 'post',
+			async : true
+		}).success(function(data) {
+			location.href = "login.html";
+		})
+	});
+</script>
+</body>
+</html>

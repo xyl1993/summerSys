@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="summer.me.mapper.MeMapper">
+	<resultMap id="meMap" type="summer.me.model.MeModel">
+		<id property="id" column="id" jdbcType="VARCHAR" />
+		<result property="name" column="name" />
+		<result property="job" column="job" />
+		<result property="birthday" column="birthday" />
+		<result property="city" column="city" />
+		<result property="tel" column="tel" />
+		<result property="email" column="email" />
+		<result property="blog" column="blog" />
+		<result property="picUrl" column="pic_url" />
+		<result property="userName" column="user_name" />
+		<result property="password" column="password" />
+		<result property="description" column="description" />
+		<result property="creater" column="creater" />
+		<result property="createrTime" column="creater_time" />
+		<result property="modifier" column="modifier" />
+		<result property="modifierTime" column="modifier_time" />
+	</resultMap>
+	
+	
+	<select id="getMeList" parameterType="map" resultMap="meMap">
+		select * from t_me 
+		<where>
+			<if test="token!=null and token!='' ">
+				and token = #{token}
+			</if>
+		</where>
+	</select>
+	<select id="selectOne" parameterType="string" resultType="int">
+		select count(*) from t_me where id = #{id}
+	</select>
+	<insert id="insert" parameterType="summer.me.model.MeModel" keyProperty="id" useGeneratedKeys="true">
+	    insert into t_me (
+	        id,
+	        name,
+	        job,
+	        birthday,
+	        city,
+	        tel,
+	        email,
+	        blog,
+	        description,
+	        creater,
+	        creater_time,
+	        modifier,
+	        modifier_time
+	        )values(
+	        #{id},
+	        #{name},
+	        #{job},
+	        #{birthday},
+	        #{city},
+	        #{tel},
+	        #{email},
+	        #{blog},
+	        #{description},
+	        #{creater},
+	        #{createrTime},
+	        #{modifier},
+	        #{modifierTime}
+        )
+	</insert>
+	
+	<update id="update" parameterType="summer.module.model.ModuleModel">
+		update t_me
+		set 
+	        name          =#{name},
+	        job          =#{job},
+	        birthday          =#{birthday},
+			city        =#{city},
+			tel            =#{tel},
+			email            =#{email},
+			blog            =#{blog},
+			description                =#{description},
+			modifier                 =#{modifier},
+			modifier_time              = #{modifierTime},
+			pic_url                  =#{picUrl}
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="string">
+		delete from t_me where id=#{id}
+	</delete>
+</mapper>

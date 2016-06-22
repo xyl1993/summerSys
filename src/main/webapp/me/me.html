@@ -1,0 +1,102 @@
+<meta charset="utf-8">
+<div id="meGrid">
+</div>
+<script>
+$(function(){
+	$('#meGrid').datagrid({
+	    fit:true,
+	    method: 'POST',
+	    idField: 'id',
+	    striped: true,
+	    fitColumns: true,
+	    singleSelect: true,
+	    rownumbers: true,
+	    pagination: false,
+	    nowrap: false,
+	    showFooter: true,
+	    columns: [[
+	        { field: 'name', title: '姓名', width: 180, align: 'left' },
+	        { field: 'job', title: '职位', width: 180, align: 'left' },
+	        { field: 'birthday', title: '生日', width: 150, align: 'left',formatter: formatDatebox },
+	        { field: 'city', title: '城市', width: 100, align: 'left' },
+	        { field: 'tel', title: '电话', width: 100, align: 'left' },
+	        { field: 'email', title: '邮箱', width: 100, align: 'right' },
+	        { field: 'blog', title: 'blog', width: 100, align: 'right' }
+	    ]],
+	    toolbar: [{
+				iconCls: 'icon-edit',
+				text:'修改',
+				id:'me_update',
+				handler: function(){
+					editMe('edit');
+				}
+			}],
+	    onDblClickRow: function (rowIndex, rowData) {
+	    	if ($('#mainPanle').tabs('exists', '个人详情')){
+		        $('#mainPanle').tabs('close', '个人详情'); 
+		    }
+	    	/**添加一个tab标签**/
+		    $("#mainPanle").tabs('add',{
+		    	title:'个人详情',
+			    closable:true,
+			    href:'../me/meDetails.html',
+				onLoad:function(){
+					// 加载表单数据
+					loadData(rowData);
+					$('#me_form a,#me_form #me-filePicker').css({'display':'none'});
+					$('#me_form input,#me_form textarea').prop('readOnly',true);
+				}
+	   		});
+        }
+	});
+	$.ajax({
+		url : '../me/getMeList',
+		headers:{
+			'token':sessionStorage.getItem("token")
+		},
+		method : 'post',
+	}).success(function(resp) {
+		$('#meGrid').datagrid('loadData',resp.data);
+	});
+})
+
+function editMe(type){
+	if(type == 'edit'){
+		var rec=$('#meGrid').datagrid('getSelections')[0];
+		if(!rec){
+			$.messager.alert('提示',selectOne,'warning');
+			return;
+		}
+        if ($('#mainPanle').tabs('exists', '个人详情')){
+	        $('#mainPanle').tabs('close', '个人详情'); 
+	    } 
+	    /**添加一个tab标签**/
+	    $("#mainPanle").tabs('add',{
+	    	title:'个人详情',
+		    closable:true,
+		    href:'../me/meDetails.html',
+			onLoad:function(){
+				// 加载表单数据
+				loadData(rec);
+			}
+   		});
+    }
+}
+//加载表单数据
+function loadData(rec) {
+	$('#me_id').val(rec.id);
+	$('#me_name').val(rec.name);
+	if(rec.birthday){
+		$('#me_birthday').datebox('setValue',getSmpFormatDateByLong(rec.birthday,false));
+	}
+	$('#me_city').val(rec.city);
+	$('#me_job').val(rec.job);
+	$('#me_tel').val(rec.tel);
+	$('#me_email').val(rec.email);
+	$('#me_blog').val(rec.blog);
+	$('#me_description').val(rec.description);
+	$('#me_picUrl').val(rec.picUrl);
+	$('.default-img').attr('src',config.uploadServer+rec.picUrl);
+	// 加载form表单数据
+}
+</script>

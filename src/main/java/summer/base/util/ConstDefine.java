@@ -1,5 +1,10 @@
 package summer.base.util;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
 public class ConstDefine {
 
 	public static final String CONST_UPLOADFILEPATH_KEY = "\\ry_upload\\project_user\\";
@@ -21,4 +26,28 @@ public class ConstDefine {
 	public static final String CONST_DATE_FORMATE_2 = "yyyy-MM-dd";
 	// 结束时间
 	public static final String CONST_END_DATE = "enddate";
+	
+	/**
+	 * 设置返回给前台DATAGRID 分页使用的Map 
+	 * @param ps
+	 * @return
+	 */
+	public static <T> Map<String,Object> getPageMap(Pagination<T> ps){
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("total",ps.getCurrentPage());
+		map.put("rows",ps.getRecordCount());
+		return map;
+	}
+	
+	/**
+	 * 设置返回给前台DATAGRID 不分页使用的Map 
+	 * @param ps
+	 * @return
+	 */
+	public static <T> Map<String,Object> getListMap(List<T> ps){
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("rows",ps);
+		return map;
+	}
+	
 }

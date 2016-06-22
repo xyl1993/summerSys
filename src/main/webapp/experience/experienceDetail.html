@@ -1,0 +1,131 @@
+<meta charset="utf-8">
+<div id="expDetails" class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'north'" style="height:260px">
+		<div class="datagrid-toolbar">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onClick="companyClick()" id="prj-save-btn" iconCls="icon-save">保存</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" onClick="prjClick('add')" id="prj-add-btn" iconCls="icon-add">新增</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" onClick="prjClick('edit')" id="prj-edit-btn" iconCls="icon-edit">修改</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" onClick="del()" id="prj-del-btn" iconCls="icon-remove">删除</a>
+		</div>
+		<form id="exp_form">
+			<input type="text" id="exp_id" hidden>
+		    <div class="form-cointer">
+		        <div class="form-details-dyn input-dyn">
+		            <label class="label-name" for="name">公司名称:</label>
+		            <div class="form-input-dyn">
+		                <input class="easyui-validatebox form-input" id="exp_name" type="text" name="exp_name" maxLength="22"/>
+		            </div>
+		        </div>
+		        <div class="form-details-dyn input-dyn">
+		            <label class="label-name" for="name">公司地点:</label>
+		            <div class="form-input-dyn">
+		                <input class="easyui-validatebox form-input" id="exp_address" type="text" name="exp_address" maxLength="22"/>
+		            </div>
+		        </div>
+		        <div class="form-details-dyn input-dyn">
+		            <label class="label-name" for="name">公司性质:</label>
+		            <div class="form-input-dyn">
+		                <input class="easyui-validatebox form-input" id="exp_nature" type="text" name="exp_nature" maxLength="22"/>
+		            </div>
+		        </div>
+		        <div class="clear"></div>
+		    </div>
+		    <div class="form-cointer">
+		        <div class="form-details-dyn input-dyn">
+		            <label class="label-name" for="name">公司规模:</label>
+		            <div class="form-input-dyn">
+		                <input class="easyui-validatebox form-input" id="exp_size" type="text" name="exp_size" maxLength="22"/>
+		            </div>
+		        </div>
+		        <div class="form-details-dyn input-dyn">
+		            <label class="label-name" for="name">工作日期从:</label>
+		            <div class="form-input-dyn">
+		                <input class="easyui-validatebox form-input" id="exp_start" type="text" name="exp_start" />
+		            </div>
+		        </div>
+		        <div class="form-details-dyn input-dyn">
+		            <label class="label-name" for="name">至:</label>
+		            <div class="form-input-dyn">
+		                <input class="easyui-validatebox form-input" id="exp_end" type="text" name="exp_end"/>
+		            </div>
+		        </div>
+		        <div class="clear"></div>
+		    </div>
+		    <div class="form-cointer">
+		        <div class="form-details-dyn input-dyn">
+		            <label class="label-name" for="name">所属行业:</label>
+		            <div class="form-input-dyn">
+		                <input class="easyui-validatebox form-input" id="exp_industry" type="text" name="me_industry"  maxLength="22"/>
+		            </div>
+		        </div>
+		        <div class="clear"></div>
+		    </div>
+		    <div class="form-cointer">
+		        <div class="form-details-dyn textarea-dyn">
+		            <label class="label-name" for="name">工作职责:</label>
+		            <div class="form-input-dyn">
+		                <textarea class="easyui-validatebox form-input" id="exp_duty" type="text" name="me_duty" maxLength="100"/>
+		            </div>
+		        </div>
+		        <div class="clear"></div>
+		    </div>
+		    <div class="form-cointer">
+		        <div class="form-details-dyn textarea-dyn">
+		            <label class="label-name" for="name">备注:</label>
+		            <div class="form-input-dyn">
+		                <textarea class="form-input" id="exp_remarks" type="text" name="exp_remarks" maxLength="100"/>
+		            </div>
+		        </div>
+		        <div class="clear"></div>
+		    </div>
+		</form>
+    </div>
+	<div id="prjMng" class="easyui-panel" data-options="region:'center',title:'职位信息' " style="border-top: 0px;height:100%;">
+	    <table id="prjGrid"></table>
+	</div>
+	<div id="projectWin">
+		<div style="margin:10px;">
+			<form id="projectForm" method="post" style="width:100%">
+			    <input type="text" id="prjId" hidden />
+				<table cellspacing="5">
+					<tbody>
+						<tr>
+							<td align="right">项目名称:</td>
+							<td style="width:280px;"><input style="width:100%" class="easyui-validatebox" data-options="required:true,validType:'length[0,22]'" 
+							type="text" id="prjName" name="prjName"/></td>
+						</tr>
+						<tr>
+							<td align="right">项目开始:</td>
+							<td style="width:280px;">
+								<input class="easyui-validatebox" style="width:100%" id="projectStart" type="text" name="projectStart"/>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">至:</td>
+							<td style="width:280px;">
+								<input class="easyui-validatebox" style="width:100%"  id="projectEnd" type="text" name="projectEnd"/>
+							</td>
+						</tr>
+	   					<tr>
+							<td align="right">项目描述</td>
+							<td style="width:280px;">
+								<textarea style="height:100px;width:100%" id="prjDescribe" name="prjDescribe" class="easyui-validatebox" 
+									data-options="validType:'length[0,100]'" rows="" cols="">
+								</textarea> 
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="vertical-align:text-top;">项目职责:</td>
+							<td style="width:280px;">
+								<textarea style="height:100px;width:100%" id="prjDuty" name="prjDuty" class="easyui-validatebox" 
+									data-options="validType:'length[0,100]'" rows="" cols="">
+								</textarea> 
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			</div>
+	</div>
+</div>
+<script src="../experience/js/expDetails.js"></script>

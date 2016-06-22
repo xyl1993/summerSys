@@ -13,7 +13,7 @@
 		<result property="iconCls" column="icon_cls" />
 		<result property="remark" column="remark" />
 		<result property="creater" column="creater" />
-		<result property="createrTime" column="created_time" />
+		<result property="createrTime" column="creater_time" />
 		<result property="modifier" column="modifier" />
 		<result property="modifierTime" column="modifier_time" />
 	</resultMap>
@@ -26,6 +26,59 @@
 				and parent_id=#{pid} 
 			</if>
 		</where>
+		order by ordernum ASC
 	</select>
-
+	
+	<select id="selectOne" parameterType="string" resultType="int">
+		select count(*) from op_module where id = #{id}
+	</select>
+	
+	<insert id="insert" parameterType="summer.module.model.ModuleModel" keyProperty="id" useGeneratedKeys="true">
+	    insert into op_module (
+	        id,
+	        text,
+	        parent_id,
+	        url,
+	        ordernum,
+	        isleaf,
+	        icon_cls,
+	        remark,
+	        creater,
+	        creater_time,
+	        modifier,
+	        modifier_time)values(
+	        #{id},
+	        #{text},
+	        #{parentId},
+	        #{url},
+	        #{ordernum},
+	        #{isleaf},
+	        #{iconCls},
+	        #{remark},
+	        #{creater},
+	        #{createrTime},
+	        #{modifier},
+	        #{modifierTime}
+        )
+	</insert>
+	
+	<update id="update" parameterType="summer.module.model.ModuleModel">
+		update op_module
+		set 
+	        text          =#{text},
+	        parent_id          =#{parentId},
+			url        =#{url},
+			ordernum            =#{ordernum},
+			isleaf            =#{isleaf},
+			icon_cls            =#{iconCls},
+			remark                =#{remark},
+			creater          =#{creater},
+			creater_time             =#{createrTime},
+			modifier                 =#{modifier},
+			modifier_time              = #{modifierTime}
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="string">
+		delete from op_module where id=#{id}
+	</delete>
 </mapper>

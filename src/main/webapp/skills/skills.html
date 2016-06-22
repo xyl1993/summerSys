@@ -1,0 +1,17 @@
+<meta charset="utf-8">
+<div class="easyui-layout" data-options="fit:true">
+    <div class="form-cointer">
+        <div class="form-details-dyn textarea-skills-dyn" style="float:none;">
+            <input type="text" id="skillsId" hidden />
+            <label class="label-name" for="name" style="font-size:18px;">个人技能:</label>
+            <div class="form-input-dyn">
+                <textarea class="form-input" id="skillsText" name="skillsText" maxLength="255"/>
+            </div>
+            <div class="skills-btn-dyn">
+		        <a class="btn btn-default">重置</a>
+		        <a class="btn btn-info" onclick="skillSubmit();">提交</a>
+		    </div>
+        </div>
+    </div>
+</div>
+<script src="../skills/js/skills.js"></script>

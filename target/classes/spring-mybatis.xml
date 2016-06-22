@@ -26,7 +26,17 @@
 		test.service.impl
 		"/>
 	<!-- Configures the @Controller programming model 必须加上这个，不然请求controller时会出现no mapping url错误-->
-	<mvc:annotation-driven />
+     <mvc:annotation-driven />
+
+    <mvc:annotation-driven>  
+        <mvc:message-converters>  
+            <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">  
+                <property name="objectMapper" ref="customObjectMapper"></property>  
+            </bean>  
+        </mvc:message-converters>  
+    </mvc:annotation-driven>  
+    <bean id="customObjectMapper" class="summer.base.util.CustomObjectMapper"></bean>
+    
     <!-- 用apache的datasource -->
 	<bean id="dataSource"   class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 		p:driverClassName="${jdbc.driverClassName}"

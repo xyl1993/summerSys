@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="summer.experience.mapper.ProjectMapper">
+	<resultMap id="projectMap" type="summer.experience.model.ProjectModel">
+		<id property="id" column="id" jdbcType="VARCHAR" />
+		<result property="startTime" column="start_time" />
+		<result property="endTime" column="end_time" />
+		<result property="prjName" column="prj_name" />
+		<result property="describe" column="prj_describe" />
+		<result property="duty" column="duty" />
+		<result property="companyId" column="company_id" />
+	</resultMap>
+	
+	
+	<select id="getProjectList" parameterType="map" resultMap="projectMap">
+		select * from t_project where company_id = #{companyId}
+	</select>
+	<select id="selectOne" parameterType="string" resultType="int">
+		select count(*) from t_project where id = #{id}
+	</select>
+	<insert id="insert" parameterType="summer.experience.model.ProjectModel" keyProperty="id" useGeneratedKeys="true">
+	    insert into t_project (
+	        id,
+	        start_time,
+	        end_time,
+	        prj_name,
+	        prj_describe,
+	        duty,
+	        company_id
+	        )values(
+	        #{id},
+	        #{startTime},
+	        #{endTime},
+	        #{prjName},
+	        #{describe},
+	        #{duty},
+	        #{companyId}
+        )
+	</insert>
+	
+	<update id="update" parameterType="summer.experience.model.ProjectModel">
+		update t_project
+		set 
+	        start_time          =#{startTime},
+	        end_time          =#{endTime},
+	        prj_name          =#{prjName},
+			prj_describe        =#{describe},
+			duty            =#{duty}
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="string">
+		delete from t_project where id=#{id}
+	</delete>
+	<delete id="deleteByCom" parameterType="string">
+		delete from t_project where company_id=#{companyId}
+	</delete>
+</mapper>

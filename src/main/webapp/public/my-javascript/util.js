@@ -313,3 +313,149 @@ function showMsg(msg,title,fn){
 		}
 	});
 }
+/**
+	 * 获取随机生成的主键
+	 * 
+	 * @param {}
+	 *            num 传入的模块名称 比如 投标立项 'tblx' 返回随机生成的主键ID
+	 */
+function getRandomNo(num){
+	num = num.length > 7 ? num.substring(0, 7) : num;
+	var len = len || 15;
+	var $chars = '1234567890';
+	var maxPos = $chars.length;
+	var randomNo = num;
+	for (i = 0; i < len; i++) {
+		randomNo += $chars.charAt(Math.floor(Math.random() * maxPos));
+	}
+	return randomNo;
+}
+Date.prototype.format = function (format) {  
+    var o = {  
+        "M+": this.getMonth() + 1, // month  
+        "d+": this.getDate(), // day  
+        "h+": this.getHours(), // hour  
+        "m+": this.getMinutes(), // minute  
+        "s+": this.getSeconds(), // second  
+        "q+": Math.floor((this.getMonth() + 3) / 3), // quarter  
+        "S": this.getMilliseconds()  
+        // millisecond  
+    }  
+    if (/(y+)/.test(format))  
+        format = format.replace(RegExp.$1, (this.getFullYear() + "")  
+            .substr(4 - RegExp.$1.length));  
+    for (var k in o)  
+        if (new RegExp("(" + k + ")").test(format))  
+            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));  
+    return format;  
+}  
+function formatDatebox(value) {  
+    if (value == null || value == '') {  
+        return '';  
+    }  
+    var dt;  
+    if (value instanceof Date) {  
+        dt = value;  
+    } else {  
+        dt = new Date(value);  
+    }  
+  
+    return dt.format("yyyy-MM-dd"); //扩展的Date的format方法(上述插件实现)  
+}  	
+function jsonDateFormat (jsonDt, format) {	//日期转换方法
+    var date, timestamp, dtObj;
+    timestamp = jsonDt.replace(/\/Date\((\d+)\)\//, "$1");
+    date = new Date(Number(timestamp));
+    dtObj = {
+        "M+": date.getMonth() + 1,   //月
+        "d+": date.getDate(),        //日
+        "h+": date.getHours(),       //时
+        "m+": date.getMinutes(),     //分
+        "s+": date.getSeconds()     //秒
+    };
+    if (/(y+)/.test(format)) {
+        format = format.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+    };
+    for (var k in dtObj) {
+        if (new RegExp("(" + k + ")").test(format)) {
+
+            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? dtObj[k] : ("00" + dtObj[k]).substr(("" + dtObj[k]).length));
+        }
+    }
+    return format;
+}
+/**
+ * 转换日期对象为日期字符串
+ * 
+ * @param date
+ *            日期对象
+ * @param isFull
+ *            是否为完整的日期数据, 为true时, 格式如"2013-12-06 01:05:04" 为false时, 格式如
+ *            "2013-12-06"
+ * @return 符合要求的日期字符串
+ */
+function getSmpFormatDate(date, isFull) {
+	var pattern = "";
+	if (isFull == true || isFull == undefined) {
+		pattern = "yyyy-MM-dd hh:mm:ss";
+	} else {
+		pattern = "yyyy-MM-dd";
+	}
+	return getFormatDate(date, pattern);
+}
+/**
+ * 转换当前日期对象为日期字符串
+ * 
+ * @param date
+ *            日期对象
+ * @param isFull
+ *            是否为完整的日期数据, 为true时, 格式如"2013-12-06 01:05:04" 为false时, 格式如
+ *            "2013-12-06"
+ * @return 符合要求的日期字符串
+ */
+function getSmpFormatNowDate(isFull) {
+	return getSmpFormatDate(new Date(), isFull);
+}
+/**
+ * 转换long值为日期字符串
+ * 
+ * @param l
+ *            long值
+ * @param isFull
+ *            是否为完整的日期数据, 为true时, 格式如"2013-12-06 01:05:04" 为false时, 格式如
+ *            "2013-12-06"
+ * @return 符合要求的日期字符串
+ */
+function getSmpFormatDateByLong(l, isFull) {
+	return getSmpFormatDate(new Date(l), isFull);
+}
+/**
+ * 转换long值为日期字符串
+ * 
+ * @param l
+ *            long值
+ * @param pattern
+ *            格式字符串,例如：yyyy-MM-dd hh:mm:ss
+ * @return 符合要求的日期字符串
+ */
+function getFormatDateByLong(l, pattern) {
+	return getFormatDate(new Date(l), pattern);
+}
+/**
+ * 转换日期对象为日期字符串
+ * 
+ * @param l
+ *            long值
+ * @param pattern
+ *            格式字符串,例如：yyyy-MM-dd hh:mm:ss
+ * @return 符合要求的日期字符串
+ */
+function getFormatDate(date, pattern) {
+	if (date == undefined) {
+		date = new Date();
+	}
+	if (pattern == undefined) {
+		pattern = "yyyy-MM-dd hh:mm:ss";
+	}
+	return date.format(pattern);
+}

@@ -1,0 +1,241 @@
+<div id="module" class="easyui-layout" data-options="fit:true" >
+	<div  data-options="region:'west',title:'模块',tools:'#module_tool' "  style="width:250px;border-top: 0px;height:100%;">
+	    	<ul name="moduletree" style="padding-left:10px;"></ul>
+    </div>
+    <div id="modulemng" class="easyui-panel" data-options="region:'center',title:'模块信息' " style="border-top: 0px;">
+	    	<table id="moduletable"></table>
+    </div> 
+</div>
+<div id="module_tool">
+	<a href="javascript:void(0)" id="mtree_reload" class="icon-reload" onclick="refreshMtree()"></a>
+</div>
+<div id="moduleWin">
+		<div style="margin:10px;">
+		<form id="moduleForm" method="post" style="width:100%">
+			<table cellspacing="5">
+				<tbody>
+					<tr>
+						<td style="width:60px;" align="right">父模块ID:<input type="hidden" id="id" name="id"/></td>
+						<td style="width:280px;">
+							<input style="width:100%" class="easyui-validatebox"
+							type="text" id="moduleId" readonly="readonly" name="parentId"/></td>
+					</tr>
+					<tr>
+						<td align="right">模块名称:</td>
+						<td style="width:280px;"><input style="width:100%" class="easyui-validatebox" data-options="required:true,validType:'length[0,50]'" 
+						type="text" name="text"/></td>
+					</tr>
+					<tr>
+						<td align="right">模块路径:</td>
+						<td style="width:280px;"><input style="width:100%" class="easyui-validatebox" data-options="validType:'length[0,255]'" type="text" name="url"/></td>
+					</tr>
+					<tr>
+						<td align="right">叶节点:</td>
+						<td style="width:280px;">
+							<select name="isleaf" id="isleaf" style="width:100%">
+								<option value="1">是</option>
+								<option value="0">否</option>
+							</select>
+						</td>
+					</tr>
+   					<tr>
+						<td align="right">排序:</td>
+						<td style="width:280px;"><input style="width:100%" type="text" name="ordernum"/></td>
+					</tr>
+					<tr>
+						<td align="right" style="vertical-align:text-top;">备注:</td>
+						<td style="width:280px;">
+							<textarea style="height:100px;width:100%" name="remark" class="easyui-validatebox" 
+								data-options="validType:'length[0,255]'" rows="" cols="">
+							</textarea> 
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+		</div>
+</div>
+<script type="text/javascript">
+$(function(){
+	var mtree=$('ul[name="moduletree"]');
+	var mgrid=$('#moduletable');
+	mgrid.datagrid({
+		fit:true,
+		striped:true,
+		fitColumns:true,
+		singleSelect:true,
+		border:false,
+		columns:[[  
+	        {field:'id',title:'模块ID',width:60},    
+	        {field:'parentId',title:'模块父ID',width:60}, 
+	        {field:'text',title:'模块名称',width:120}, 
+	        {field:'url',title:'模块URL',width:150}, 
+	        {field:'isleaf',title:'叶节点',width:120,
+	        	formatter: function(v,row,index){
+					return v===1?'是':'否'
+				}
+	        }, 
+	        {field:'ordernum',title:'排序',width:60}    
+    	]],
+    	toolbar: [{
+					iconCls: 'icon-add',
+					text:'新增',
+					disabled:true,
+					id:'module_add',
+					handler: function(){
+						addModule('add');
+					}
+				},'-',{
+					iconCls: 'icon-edit',
+					text:'修改',
+					disabled:true,
+					id:'module_update',
+					handler: function(){
+						addModule('edit');
+					}
+				},'-',{
+					iconCls: 'icon-remove',
+					text:'删除',
+					id:'module_del',
+					disabled:true,
+					handler: function(){
+						del();
+				}
+		}],
+		onClickRow:function(rowIndex, rowData){
+			$('#module_update').linkbutton('enable');
+			$('#module_del').linkbutton('enable');
+		},
+		onLoadSuccess:function(){
+			$('#module_update').linkbutton('disable');
+			$('#module_del').linkbutton('disable');
+		}
+	});
+	refreshMtree();
+});
+function addModule(action){
+	$('#moduleForm').form('clear');
+	if(action=='add'){
+		var id = getRandomNo("op_md"),
+		title='模块新增';
+		var mtreeRec=$('ul[name="moduletree"]').tree('getSelected');
+		$('#moduleId').val(mtreeRec.id);
+		console.log(id);
+		$('#isleaf').val(1);
+		$('#id').val(id);
+	}else if(action=='edit'){
+		var title='模块修改';
+		var rec=$('#moduletable').datagrid('getSelections')[0];
+		if(rec){
+			$('#moduleForm').form('load',rec);
+		}else{
+			$.messager.alert('提示',selectOne,'warning');
+			return;
+		}
+	}
+	$('#moduleWin').dialog({    
+	    title:title,    
+	    width: 400,    
+	    height: 350,       
+	    modal: true,
+	    buttons:[{
+			text:'保存',
+			handler:function(){
+				var d = {};
+				var t = $('#moduleForm').serializeArray();
+			    $.each(t, function() {
+			      d[this.name] = this.value;
+			    });
+				$.ajax({
+					type: "POST",
+					data:JSON.stringify(d),
+					url: "../module/save",
+					dataType: 'json',
+					contentType: 'application/json',
+					success: function (res) {
+						if(res.success){
+				       		showMsg('保存成功!');
+				       		$('#moduleWin').dialog('close');
+				       		refreshMtree();
+				       		reload();						}
+					}
+				});
+			}
+		},{
+			text:'重置',
+			handler:function(){
+				$('#moduleForm')[0].reset();
+			}
+		}]
+	});
+}
+function del(){
+	var rec=$('#moduletable').datagrid('getSelections')[0];
+	if(rec.isleaf===0){
+		$.messager.alert(alertMsg,"此模块下尚存在子节点,不允许删除!",'warning');
+		return;
+	}
+	if(rec){
+		$.messager.confirm(alertMsg,isDelMsg,function(r){    
+		    if (r){ 
+		    	$.ajax({
+					type: "POST",
+					data:JSON.stringify(rec),
+					url: '../module/delete',
+					dataType: 'json',
+					contentType: 'application/json',
+					success: function (res) {
+  						if(res.success){
+  							showMsg('删除成功!');
+  							refreshMtree();
+  						}
+					}
+				});
+		    }    
+		});
+	}else{
+		$.messager.alert('提示',selectOne,'warning');
+		return;
+	}
+}
+function refreshMtree(){
+	var mtree=$('ul[name="moduletree"]');
+	var mgrid=$('#moduletable');
+	$.ajax({
+		url : '../module/getModule',
+		method : 'post'
+	}).success(function(resp) {
+		setTimeout(function() {
+			mtree.tree({
+				data : resp.data,
+				fit:true,
+				onClick: function(node){
+				    $.post("../module/getModuleListByPid?pid="+node.id,function (res) {
+				    	mgrid.datagrid('loadData',res.data);
+				    })
+					$('#module_add').linkbutton('enable');
+				},
+				onLoadSuccess:function(node,data){
+					 $.post("../module/getModuleListByPid?pid=-1",function (res) {
+					    	mgrid.datagrid('loadData',res.data);
+					    })
+					$('#module_add').linkbutton('disable');
+				}
+			});
+		}, 500)
+	});
+	
+}
+function reload(){  
+	$.ajax({
+		url : '../module/getModule?id=0',
+		method : 'post'
+	}).success(function(resp) {
+		setTimeout(function() {
+			$('#tt').tree({
+				data : resp.data[0].children
+			});
+		}, 500)
+	})
+}  
+</script>

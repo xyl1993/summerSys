@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="summer.user.mapper.UserMapper">
+	<insert id="insert" parameterType="summer.user.model.UserModel" keyProperty="id" useGeneratedKeys="true">
+	    insert into t_me (
+	        id,
+	        name,
+	        pic_url,
+	        user_name,
+	        password,
+	        token,
+	        last_login_time,
+	        status,
+	        creater,
+	        creater_time,
+	        modifier,
+	        modifier_time
+	        )values(
+	        #{id},
+	        #{name},
+	        #{picUrl},
+	        #{userName},
+	        #{password},
+	        #{token},
+	        #{lastLoginTime},
+	        #{status},
+	        #{creater},
+	        #{createrTime},
+	        #{modifier},
+	        #{modifierTime}
+        )
+	</insert>
+	
+	<select id="selectOne" parameterType="string" resultType="int">
+		select count(*) from t_me where user_name = #{userName}
+	</select>
+	
+	<select id="login" parameterType="string" resultType="summer.user.model.UserModel">
+		select * from t_me where user_name = #{userName} and password=#{password}
+	</select>
+	
+	<update id="update" parameterType = "summer.user.model.UserModel">
+		update t_me set
+		    token = #{token},
+		    status = #{status},
+		    last_login_time = #{lastLoginTime}
+		where id=#{id}
+	</update>
+	<update id="loginOut" parameterType = "map">
+		update t_me set
+		    status = #{status}
+		where token=#{token}
+	</update>
+</mapper>

@@ -1,0 +1,196 @@
+<meta charset="utf-8">
+<form id="me_form" method="post">
+    <div class="me-form-main">
+    	<div class="me-icon-dyn">
+            <div class="img-dyn uploader-list" id="fileList" class="uploader-list">
+                <img class="default-img"/>
+            </div>
+            <div id="me-filePicker" class="me-edit-img">&nbsp;&nbsp;</div>
+    	</div>
+    	<div class="me-detail-dyn">
+    		<input type="text" id="me_id" hidden>
+    		<input type="text" id="me_picUrl" hidden>
+    	    <div class="me-label-dyn">
+				<label for="name">Name:</label>
+				<input class="easyui-validatebox" id="me_name" type="text" name="name" data-options="required:true" />
+		    </div>
+		    <div class="me-label-dyn">
+				<label for="job">job:</label>
+				<input class="easyui-validatebox" id="me_job" type="text" name="job" data-options="required:true" />
+		    </div>
+		    <div class="me-label-dyn">
+				<label for="Birthday">Birthday:</label>
+				<input class="easyui-validatebox" type="text" id="me_birthday" name="me_birthday" data-options="required:true" />
+		    </div>
+		    <div class="me-label-dyn">
+				<label for="email">City:</label>
+				<input class="easyui-validatebox" type="text" id="me_city" name="city" data-options="required:true" />
+		    </div>
+		    <div class="me-label-dyn">
+				<label for="email">Tel:</label>
+				<input class="easyui-validatebox" type="text" id="me_tel" name="tel" data-options="validType:'phoneNum'" />
+		    </div>
+		    <div class="me-label-dyn">
+				<label for="email">Email:</label>
+				<input class="easyui-validatebox" type="text" id="me_email" name="email" data-options="validType:'email'" />
+		    </div>
+		    <div class="me-label-dyn">
+				<label for="email">	Blog:</label>
+				<input class="easyui-validatebox" type="text" id="me_blog" name="blog" />
+		    </div>
+		    <div class="me-area-dyn">
+				<label for="email">	Description:</label>
+				<textarea class="easyui-validatebox me-textarea" id="me_description" type="text" name="description" placeholder="多行文本以';'结尾" data-options="validType:'length[0,255]'" />
+		    </div>
+		    <div class="me-btn-dyn">
+		        <a class="btn btn-info" onclick="submit();">提交</a>
+		        <a class="btn btn-default">重置</a>
+		    </div>
+    	</div>
+    </div>
+</form>
+<script>
+	$.extend($.fn.validatebox.defaults.rules, {   
+	    phoneNum: { //验证手机号  
+	        validator: function(value, param){
+	         return /^1[3-8]+\d{9}$/.test(value);
+	        },   
+	        message: '请输入正确的手机号码。'  
+	    },
+	    
+	    telNum:{ //既验证手机号，又验证座机号
+	      validator: function(value, param){
+	          return /(^(0[0-9]{2,3}\-)?([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$)|(^((\d3)|(\d{3}\-))?(1[358]\d{9})$)/.test(value);
+	         },   
+	         message: '请输入正确的电话号码。'
+	    }  
+	});
+    $(function(){
+    	$('#me_birthday').datebox({});
+    	// 初始化Web Uploader
+    	var uploader = WebUploader.create({
+
+    	    // 选完文件后，是否自动上传。
+    	    auto: true,
+
+    	    // swf文件路径
+    	    swf:  'public/js-util/Uploader.swf',
+
+    	 // 文件接收服务端。
+    	    server: '../user/uploadPic',
+
+    	    // 选择文件的按钮。可选。
+    	    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+    	    pick: '#me-filePicker',
+
+    	    // 只允许选择图片文件。
+    	    accept: {
+    	        title: 'Images',
+    	        extensions: 'gif,jpg,jpeg,bmp,png',
+    	        mimeTypes: 'image/*'
+    	    }
+    	});
+    	// 当有文件添加进来的时候
+    	uploader.on( 'fileQueued', function( file ) {
+    		$('.default-img').remove();
+    	    var $li = $(
+    	            '<div id="' + file.id + '" class="file-item thumbnail">' +
+    	                '<img>' +
+    	                '<div class="info">' + file.name + '</div>' +
+    	            '</div>'
+    	            ),
+    	        $img = $li.find('img');
+            var $list = $('#fileList');
+
+    	    // $list为容器jQuery实例
+    	    $list.append( $li );
+
+    	    // 创建缩略图
+    	    // 如果为非图片文件，可以不用调用此方法。
+    	    // thumbnailWidth x thumbnailHeight 为 100 x 100
+    	    uploader.makeThumb( file, function( error, src ) {
+    	        if ( error ) {
+    	            $img.replaceWith('<span>不能预览</span>');
+    	            return;
+    	        }
+    	        $img.attr( 'src', src );
+    	    }, 180, 180 );
+    	});
+    	// 文件上传过程中创建进度条实时显示。
+    	uploader.on( 'uploadProgress', function( file, percentage ) {
+    	    var $li = $( '#'+file.id ),
+    	        $percent = $li.find('.progress span');
+
+    	    // 避免重复创建
+    	    if ( !$percent.length ) {
+    	        $percent = $('<p class="progress"><span></span></p>')
+    	                .appendTo( $li )
+    	                .find('span');
+    	    }
+
+    	    $percent.css( 'width', percentage * 100 + '%' );
+    	});
+
+    	// 文件上传成功，给item添加成功class, 用样式标记上传成功。
+    	uploader.on( 'uploadSuccess', function( file,res ) {
+    		$('#me_picUrl').val(res.data.fileUrl)
+    	    $( '#'+file.id ).addClass('upload-state-done');
+    	});
+
+    	// 文件上传失败，显示上传出错。
+    	uploader.on( 'uploadError', function( file ) {
+    	    var $li = $( '#'+file.id ),
+    	        $error = $li.find('div.error');
+
+    	    // 避免重复创建
+    	    if ( !$error.length ) {
+    	        $error = $('<div class="error"></div>').appendTo( $li );
+    	    }
+
+    	    $error.text('上传失败');
+    	});
+
+    	// 完成上传完了，成功或者失败，先删除进度条。
+    	uploader.on( 'uploadComplete', function( file ) {
+    	    $( '#'+file.id ).find('.progress').remove();
+    	});
+    	
+    })
+    function submit(){
+    	var data = {
+   			id:$('#me_id').val(),
+   			name:$('#me_name').val(),
+   			job:$('#me_job').val(),
+   			birthday: $("input[name='me_birthday']").val(),
+   			city:$('#me_city').val(),
+   			tel:$('#me_tel').val(),
+   			email:$('#me_email').val(),
+   			blog:$('#me_blog').val(),
+   			description:$('#me_description').val(),
+   			picUrl:$('#me_picUrl').val()
+    	};
+    	$.ajax({
+    		url:'../me/save',
+    		method : 'post',
+			data:JSON.stringify(data),
+			dataType: 'json',
+			contentType: 'application/json',
+    		success:function(res){
+    			if(res.success){
+    				showMsg('保存成功!');
+    				$.ajax({
+    					url : '../me/getMeList',
+    					headers:{
+    						'token':sessionStorage.getItem("token")
+    					},
+    					method : 'post'
+    				}).success(function(resp) {
+    					$('#meGrid').datagrid('loadData',resp.data);
+    				});
+    			}else{
+    				alert(res.message);
+    			}
+    		}
+    	})
+    }
+</script>

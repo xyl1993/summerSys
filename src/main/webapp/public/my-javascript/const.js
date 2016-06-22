@@ -10,3 +10,13 @@ var isDelMsg="确定删除吗？";
 var NoUpdate="该数据字典不允许进行更新操作！";
 // 系统异常提示消息
 var errorMsg="发生系统异常,请联系系统管理员！";
+
+var config =  {
+		//登陆地址
+		login_url : '../login/login.html',
+		//注册地址
+		reg_url : '../login/register.html',
+		//服务器地址
+		uploadServer:'http://192.168.60.136:8080'
+	}
+

@@ -6,8 +6,8 @@
 	<display-name>summerSys</display-name>
 
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index/index.html</welcome-file>
+		<welcome-file>index/index.jsp</welcome-file>
 	</welcome-file-list>
 	
 	<!-- Spring和mybatis的配置文件 -->  

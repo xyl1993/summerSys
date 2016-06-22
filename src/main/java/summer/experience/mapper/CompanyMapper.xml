@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="summer.experience.mapper.CompanyMapper">
+	<resultMap id="companyMap" type="summer.experience.model.CompanyModel">
+		<id property="id" column="id" jdbcType="VARCHAR" />
+		<result property="startTime" column="start_time" />
+		<result property="endTime" column="end_time" />
+		<result property="name" column="name" />
+		<result property="nature" column="nature" />
+		<result property="size" column="size" />
+		<result property="industry" column="industry" />
+		<result property="address" column="address" />
+		<result property="duty" column="duty" />
+		<result property="remarks" column="remarks" />
+		<result property="creater" column="creater" />
+		<result property="createrTime" column="creater_time" />
+		<result property="modifier" column="modifier" />
+		<result property="modifierTime" column="modifier_time" />
+	</resultMap>
+	
+	
+	<select id="getCompanyList" parameterType="map" resultMap="companyMap">
+		select * from t_company where creater = #{creater} order by creater_time desc limit #{start},#{rows}
+	</select>
+	<select id="selectOne" parameterType="string" resultType="int">
+		select count(*) from t_company where id = #{id}
+	</select>
+	<select id="getCompanyCount" parameterType="string" resultType="int">
+		select count(*) from t_company where creater = #{creater}
+	</select>
+	<insert id="insert" parameterType="summer.experience.model.CompanyModel" keyProperty="id" useGeneratedKeys="true">
+	    insert into t_company (
+	        id,
+	        start_time,
+	        end_time,
+	        name,
+	        nature,
+	        size,
+	        industry,
+	        address,
+	        duty,
+	        remarks,
+	        creater,
+	        creater_time,
+	        modifier,
+	        modifier_time
+	        )values(
+	        #{id},
+	        #{startTime},
+	        #{endTime},
+	        #{name},
+	        #{nature},
+	        #{size},
+	        #{industry},
+	        #{address},
+	        #{duty},
+	        #{remarks},
+	        #{creater},
+	        #{createrTime},
+	        #{modifier},
+	        #{modifierTime}
+        )
+	</insert>
+	
+	<update id="update" parameterType="summer.experience.model.CompanyModel">
+		update t_company
+		set 
+	        start_time          =#{startTime},
+	        end_time          =#{endTime},
+	        name          =#{name},
+			nature        =#{nature},
+			size            =#{size},
+			industry            =#{industry},
+			address            =#{address},
+			duty                =#{duty},
+			modifier                 =#{modifier},
+			modifier_time              = #{modifierTime},
+			remarks                  =#{remarks}
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="string">
+		delete from t_company where id=#{id}
+	</delete>
+</mapper>

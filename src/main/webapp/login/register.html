@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>个人主页后台管理系统登录</title>
+        <!-- CSS -->
+        <link rel="stylesheet" href="../public/bootstrap/dist/css/bootstrap.min.css">
+        <link href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">	
+		<link rel="stylesheet" href="css/form-elements.css">
+		<link rel="stylesheet" href="../public/css/webuploader.css">
+        <link rel="stylesheet" href="css/style.css">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <!-- Favicon and touch icons -->
+        <link rel="shortcut icon" href="../public/images/favicon.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../public/images/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../public/images/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../public/images/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="../public/images/apple-touch-icon-57-precomposed.png">
+
+    </head>
+
+    <body>
+        <!-- Top content -->
+        <div class="top-content">
+            <div class="inner-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="form-bottom register-bottom">
+	                        <div class="me-icon-dyn">
+	                        	<input type="text"id="id" hidden />
+	                            <input type="text"id="picUrl" hidden />
+					            <div class="img-dyn uploader-list" id="fileList" class="uploader-list">
+					                <img src="../public/images/98.jpg" class="default-img"/>
+					            </div>
+					            <div id="me-filePicker" name="filepic" class="me-edit-img">&nbsp;</div>
+					    	</div>
+					    	<div class="form-left">
+					    	    <form role="form" action="" method="post" class="login-form" id="signinForm">
+			                    	<div class="form-group">
+			                    		<label class="sr-only" for="userName">用户名</label>
+			                        	<input type="text" name="userName" placeholder="用户名..." class="userName form-control" id="userName">
+			                        </div>
+			                        <div class="form-group">
+			                        	<label class="sr-only" for="name">真实姓名</label>
+			                        	<input type="text" name="name" placeholder="真实姓名..." class="name form-control" id="name">
+			                        </div>
+			                        <div class="form-group">
+			                        	<label class="sr-only" for="password">密码</label>
+			                        	<input type="password" name="password" placeholder="密码..." class="password form-control" id="password">
+			                        </div>
+			                        <div class="form-group">
+			                        	<label class="sr-only" for="quePassword">确认密码</label>
+			                        	<input type="password" name="quePassword" placeholder="确认密码..." class="quePassword form-control" id="quePassword">
+			                        </div>
+			                        <button type="submit" class="btn">Sign in!</button>
+			                    </form>
+					    	</div> 
+	                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Javascript -->
+        <script type="text/javascript" src="../public/js-util/jquery.min.js"></script>
+        <script src="../public/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="../public/js-util/jquery.backstretch.min.js"></script>
+        <script type="text/javascript" src="../public/js-util/webuploader.min.js"></script>
+        <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js">
+        <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+        <script src="../public/my-javascript/util.js"></script>
+        <script src="../public/my-javascript/const.js"></script>
+        <script src="js/register.js"></script>
+    </body>
+
+</html>

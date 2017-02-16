@@ -166,15 +166,16 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.21</version>
+			<version>1.7.5</version>
 		</dependency>
+		
 		<!-- 用于@Valid注解 JSR-303验证 结束 -->
 
 		<!-- sql语句的输出不能少此jar -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.21</version>
+			<version>1.7.5</version>
 		</dependency>
 
 		<!-- 日志文件输出 -->

@@ -10,8 +10,6 @@ import javax.servlet.ServletContext;
 /**
  * 全局资源处理器
  * 
- * @author 丁建军
- * 
  * @date Feb 5, 2015 5:22:08 PM
  * 
  * @version 0.1
